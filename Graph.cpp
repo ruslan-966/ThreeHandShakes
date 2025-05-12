@@ -10,28 +10,39 @@ void Graph::addMembers(const std::vector<Member>&newArr)
 	allMembers.insert(allMembers.end(), newArr.begin(), newArr.end());
 }
 
-void Graph::addConnection(Member& firstMember, Member& secondMember)
-{
-	matrix[firstMember.getUnicumID()][secondMember.getUnicumID()] = 1;
-	matrix[secondMember.getUnicumID()][firstMember.getUnicumID()] = 1;
-}
+
 
 void Graph::printAllContacts(const Member& frand, const int depth)
 {
 
 }
 
-void Graph::getPairContacts(Member&, Member&, int)
+void Graph::addConnection(Member& mem_one, Member& mem_two)
 {
+	mem_one.addEdge(mem_two.getUnicumID());
+	mem_two.addEdge(mem_one.getUnicumID());
 }
 
-bool Graph::isConnectBetween(Member& firstMember, Member& secondMember)
+void Graph::printAllEdgeLists()
 {
-	return matrix[firstMember.getUnicumID()][secondMember.getUnicumID()] > 0;
-	
+	if (allMembers.size() == 0) return;
+
+	for (int i = 0; i < allMembers.size(); ++i)
+	{
+		Member currMember = allMembers[i];
+		int currID = currMember.getUnicumID();
+		for(int j = 0; j < currMember.getEdgeList().size(); ++j)
+			if(currMember.getEdgeList()[j] > currMember.getUnicumID())		// отсекаем повторяющиеся ребра
+				std::cout << "( " << currMember.getUnicumID() << "; " << currMember.getEdgeList()[j] << " ); ";
+		std::cout << std::endl;
+	}
 }
 
-bool Graph::isConnectBetween(int& firstNumber, int& secondNumber)
+void Graph::printAllMembers()
 {
-	return matrix[firstNumber][secondNumber] > 0;
+	if (allMembers.size() == 0) return;
+
+	std::cout << "Члены группы:\n";
+	for (int i = 0; i < allMembers.size(); ++i)
+		std::cout << "Имя: " << allMembers[i].getName() << "; ID = " << allMembers[i].getUnicumID() << std::endl;
 }
