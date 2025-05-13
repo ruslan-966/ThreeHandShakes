@@ -12,15 +12,51 @@ void Graph::addMembers(const std::vector<Member>&newArr)
 
 
 
-void Graph::printAllContacts(const Member& frand, const int depth)
+std::vector <int> Graph::getIdOfContacts(const char* beginer, const int depth)
 {
-
+	std::vector <int> res;
+	return res;
 }
 
-void Graph::addConnection(Member& mem_one, Member& mem_two)
+void Graph::addConnection(const char* firstName, const char* secondName)
 {
-	mem_one.addEdge(mem_two.getUnicumID());
-	mem_two.addEdge(mem_one.getUnicumID());
+	if (allMembers.size() == 0) return;
+
+	bool isFirstFind = false;
+	bool isSecondFind = false;
+	int firstPos = -1;
+	int secondPos = -1;
+	
+	for (int i = 0; i < allMembers.size(); ++i)
+	{
+		if (!isFirstFind && allMembers[i].getName() == firstName)
+		{
+			firstPos = i;
+			isFirstFind = true;
+			if (isSecondFind) break;
+		}
+		else if (!isSecondFind && allMembers[i].getName() == secondName)
+		{
+			secondPos = i;
+			isSecondFind = true;
+			if (isFirstFind) break;
+		}
+	}
+	
+	if (!isFirstFind)
+	{
+		std::cout << "Внимание! Не найден участник под именем " << firstName << std::endl;
+		return;
+	}
+	if (!isSecondFind)
+	{
+		std::cout << "Внимание! Не найден участник под именем " << secondName << std::endl;
+		return;
+	}
+
+
+	allMembers[firstPos].addEdge(allMembers[secondPos].getUnicumID());
+	allMembers[secondPos].addEdge(allMembers[firstPos].getUnicumID());
 }
 
 void Graph::printAllEdgeLists()
