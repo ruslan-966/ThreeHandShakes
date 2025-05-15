@@ -6,6 +6,22 @@
 #include <vector>
 #include "Graph.h"
 
+void printResult(const std::string& mainName, const std::vector <std::string>& result, const int& depth)
+{
+    std::cout << "Было проведено исследование связей участников. Глубина рукопожатия: " << depth << ".\n";
+    std::cout << "Ник нейим первого участника: " << mainName << std::endl;
+    std::cout << "Последующие участники:\n";
+    if (result.size() == 0)
+    {
+        std::cout << "Не обнаружены.\n";
+        return;
+    }
+    for (int i = 0; i < result.size(); ++i)
+        std::cout << result[i] << " ";
+    std::cout << std::endl;
+    return;
+}
+
 int main()
 {
     setlocale(LC_ALL, "");
@@ -34,4 +50,11 @@ int main()
     g.addConnection("Лёня", "Лена");
     
     g.printAllEdgeLists();
+
+    int depth = 3;
+    std::string firstParticipant = "Шурик";
+    std::vector <std::string> result = g.calcAllPairs(firstParticipant, depth);
+
+    printResult(firstParticipant, result, depth);
+
 }

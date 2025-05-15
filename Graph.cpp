@@ -18,6 +18,58 @@ std::vector <int> Graph::getIdOfContacts(const char* beginer, const int depth)
 	return res;
 }
 
+std::vector <std::string> Graph::calcAllPairs(const std::string& MainMember, const int& depth)
+{
+	std::vector <std::string> arrMembers;
+	// шаг номер 0
+	if (depth == 0)
+	{
+		return arrMembers;		
+	}
+	int idMainMember = -1;
+	for (int i = 0; i < allMembers.size(); ++i)
+		if (allMembers[i].getName() == MainMember)
+		{
+			idMainMember = i;
+			break;
+		}
+	if (idMainMember == -1)							// проверка на косорукость
+	{
+		std::cout << "Имя " << MainMember << " не зарегистрировано среди пользователей.\n";
+		return arrMembers;
+	}
+
+	std::vector<int> arr;							// массив подсчета связей
+	for (int i = 0; i < allMembers.size(); ++i)
+		arr.push_back(BIGINT);
+	arr[idMainMember] = 0;							// внесли начальный элемент
+	int step = 1;
+	stepWriter(arr, step, idMainMember, depth);		// анализ вынесен в эту функцию
+
+	for(int i = 0; i < arr.size(); ++i)
+		if (arr[i] <= depth && arr[i] > 0)
+		{
+			Member cM = allMembers[i];
+			arrMembers.push_back(cM.getName());
+		}
+	return arrMembers;
+}
+
+void Graph::stepWriter(std::vector<int>& arr, int& step, int& memberID, const int& depth)
+{
+	if (step > depth) return;								// условие окончания поиска
+	int newStep = step + 1;
+	Member currElement = allMembers[memberID];				// извлекли текущий элемент
+	std::vector <int> eL = currElement.getEdgeList();		// извлекли перечень ID вершин, с которыми есть ребра
+	for (int i = 0; i < eL.size(); ++i)
+	{
+		int num = eL[i];									// извлекли ID вершины, связанной с текущей
+		if (arr[num] > step)								// если вершина отстоит на большее расстояние, чем step, меняем значение
+			arr[num] = step;
+		stepWriter(arr, newStep, num, depth);				// запустили рекурсию
+	}
+}
+
 void Graph::addConnection(const char* firstName, const char* secondName)
 {
 	if (allMembers.size() == 0) return;
